@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Employee{% else %}Add Employee{% endif %} - ZM Mining System
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 p-6">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white p-8 rounded-xl shadow-xl mb-8">
+        <h2 class="text-3xl font-bold">
+            {% if form.instance.pk %}Edit Employee{% else %}Add Employee{% endif %}
+        </h2>
+        <p class="text-blue-100 mt-1">ZM Mining System • NAPSA & ZEMA Compliant</p>
+        <p class="text-xs opacity-80 mt-3">15 Nov 2025 | <span id="current-time">11:24</span> CAT</p>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="text-sm text-gray-600 mb-6">
+        <a href="{% url 'employee_dashboard' %}" class="hover:text-blue-600 underline">Employees</a>
+        <span class="mx-2">›</span>
+        <span class="font-medium text-gray-800">
+            {% if form.instance.pk %}Edit{% else %}Add{% endif %}
+        </span>
+    </div>
+
+    <!-- Form -->
+    <form method="post" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow-lg space-y-8">
+        {% csrf_token %}
+
+        <!-- Photo Upload -->
+        <div class="flex flex-col items-center mb-10">
+            <div id="photo-preview-container" class="relative mb-4">
+                {% if form.instance.photo %}
+                    <img id="photo-preview" src="{{ form.instance.photo.url }}" alt="Photo"
+                         class="w-32 h-32 rounded-full object-cover border-4 border-blue-200 shadow-lg">
+                {% else %}
+                    <div id="photo-placeholder" class="w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                        ?
+                    </div>
+                {% endif %}
+            </div>
+            <div class="text-center">
+                {{ form.photo }}
+                <input type="file" id="id_photo" name="photo" accept="image/*" class="hidden" onchange="previewPhoto(this)">
+                <label for="id_photo" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg shadow transition">
+                    Upload Photo
+                </label>
+                <p class="text-xs text-gray-500 mt-2">JPG, PNG up to 5MB</p>
+                <div id="photo-name" class="text-sm text-gray-600 mt-2">No file selected</div>
+            </div>
+        </div>
+
+        <!-- Name Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="relative">
+                {{ form.first_name }}
+                <label for="{{ form.first_name.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-blue-600 transition-all">
+                    First Name *
+                </label>
+                {% if form.first_name.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ form.first_name.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div class="relative">
+                {{ form.last_name }}
+                <label for="{{ form.last_name.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-blue-600 transition-all">
+                    Last Name *
+                </label>
+                {% if form.last_name.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ form.last_name.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- NRC -->
+        <div class="relative">
+            {{ form.nrc }}
+            <label for="{{ form.nrc.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-blue-600">
+                NRC Number * <span class="text-blue-700">ZM</span>
+            </label>
+            <p class="text-xs text-gray-500 mt-1">Format: 123456/78/9</p>
+            {% if form.nrc.errors %}
+                <p class="text-red-600 text-xs mt-1">{{ form.nrc.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- NAPSA -->
+        <div class="relative">
+            {{ form.napsa_number }}
+            <label for="{{ form.napsa_number.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-green-600">
+                NAPSA Number
+            </label>
+            <p class="text-xs text-green-600 mt-1">Required for payroll compliance</p>
+        </div>
+
+        <!-- Role -->
+        <div class="relative">
+            {{ form.role }}
+            <label for="{{ form.role.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-indigo-600">
+                Job Role *
+            </label>
+            <p class="text-xs text-gray-500 mt-1">e.g., Drill Operator, Safety Officer</p>
+        </div>
+
+        <!-- Mine -->
+        <div class="relative">
+            {{ form.mine }}
+            <label for="{{ form.mine.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-teal-600">
+                Assigned Mine *
+            </label>
+            {% if form.mine.errors %}
+                <p class="text-red-600 text-xs mt-1">{{ form.mine.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Phone & SMS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="relative">
+                {{ form.phone }}
+                <label for="{{ form.phone.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-purple-600">
+                    Phone
+                </label>
+                <p class="text-xs text-gray-500 mt-1">Format: +260971234567</p>
+            </div>
+            <div class="flex items-center space-x-3 mt-6">
+                {{ form.receive_sms }}
+                <label for="{{ form.receive_sms.id_for_label }}" class="text-sm font-medium text-gray-700">
+                    Receive SMS Alerts
+                </label>
+            </div>
+        </div>
+
+        <!-- Employment -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="relative">
+                {{ form.date_joined }}
+                <label for="{{ form.date_joined.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-cyan-600">
+                    Date Joined
+                </label>
+            </div>
+            <div class="flex items-center space-x-3 mt-6">
+                {{ form.is_active }}
+                <label for="{{ form.is_active.id_for_label }}" class="text-sm font-medium text-gray-700">
+                    Active Employee
+                </label>
+            </div>
+        </div>
+
+        <!-- Safety Training -->
+        <div class="relative">
+            {{ form.last_safety_training }}
+            <label for="{{ form.last_safety_training.id_for_label }}" class="absolute left-3 -top-2.5 bg-white px-1 text-sm font-medium text-orange-600">
+                Last Safety Training
+            </label>
+            <p class="text-xs text-orange-600 mt-1">ZEMA requires annual training</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+            <a href="{% url 'employee_dashboard' %}" 
+               class="text-gray-600 hover:text-gray-800 font-medium underline transition">
+                Cancel
+            </a>
+            <button type="submit" 
+                    class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold px-8 py-3 rounded-lg shadow-lg transform hover:scale-105 transition">
+                {% if form.instance.pk %}Update Employee{% else %}Save Employee{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Live Clock + Photo Preview -->
+<script>
+    // Live CAT Time
+    function updateTime() {
+        const now = new Date();
+        const options = { timeZone: 'Africa/Lusaka', hour12: false };
+        const timeStr = now.toLocaleTimeString('en-GB', options).slice(0, 5);
+        document.getElementById('current-time').textContent = timeStr;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Photo Preview
+    function previewPhoto(input) {
+        const file = input.files[0];
+        const previewContainer = document.getElementById('photo-preview-container');
+        const nameDisplay = document.getElementById('photo-name');
+
+        if (file) {
+            if (!file.type.match('image.*')) {
+                alert('Please select an image (JPG/PNG)');
+                input.value = '';
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File too large. Max 5MB.');
+                input.value = '';
+                return;
+            }
+
+            nameDisplay.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const placeholder = document.getElementById('photo-placeholder');
+                if (placeholder) placeholder.remove();
+
+                let img = document.getElementById('photo-preview');
+                if (!img) {
+                    img = document.createElement('img');
+                    img.id = 'photo-preview';
+                    img.className = 'w-32 h-32 rounded-full object-cover border-4 border-blue-200 shadow-lg';
+                    previewContainer.appendChild(img);
+                }
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            nameDisplay.textContent = 'No file selected';
+        }
+    }
+</script>
+{% endblock %}

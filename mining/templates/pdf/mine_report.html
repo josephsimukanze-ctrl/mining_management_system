@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ mine.name }} - Monthly Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+            @top-center {
+                content: "ZAMBIA MINISTRY OF MINES & MINERALS DEVELOPMENT";
+                font-size: 10pt;
+                font-weight: bold;
+            }
+            @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 9pt;
+            }
+        }
+        body {
+            font-family: "DejaVu Sans", sans-serif;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1d4ed8;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #1d4ed8;
+            font-size: 24pt;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .info-card strong {
+            color: #1d4ed8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        .chart-img {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: block;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 9pt;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 10px;
+        }
+        .zm-flag {
+            width: 60px;
+            float: right;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/1280px-Flag_of_Zambia.svg.png" 
+             class="zm-flag" alt="Zambia Flag">
+        <h1>{{ mine.name }}</h1>
+        <p><strong>Monthly Production & Compliance Report</strong></p>
+        <p>Generated: {{ generated_date }} | Site: {{ mine.location }}</p>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card">
+            <p><strong>Operational Status:</strong> {{ mine.status }}</p>
+            <p><strong>License Valid:</strong> Yes</p>
+        </div>
+        <div class="info-card">
+            <p><strong>Total Workforce:</strong> {{ mine.employee_count }}</p>
+            <p><strong>Equipment Units:</strong> {{ mine.equipment_count }}</p>
+        </div>
+        <div class="info-card">
+            <p><strong>Monthly Output:</strong> {{ monthly_total|floatformat:1 }} tons</p>
+            <p><strong>Daily Average:</strong> {{ avg_daily|floatformat:1 }} tons</p>
+        </div>
+        <div class="info-card">
+            <p><strong>Compliance:</strong> ZEMA • NAPSA • ZABS</p>
+            <p><strong>Report Period:</strong> {{ month_name }} {{ year }}</p>
+        </div>
+    </div>
+
+    <h2>Production Trend (Last 7 Days)</h2>
+    {% if chart_image %}
+    <img src="data:image/png;base64,{{ chart_image }}" class="chart-img" alt="Production Chart">
+    {% else %}
+    <p style="text-align:center; color:#9ca3af;">No production data for chart.</p>
+    {% endif %}
+
+    <h2>Recent Production Logs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Quantity (tons)</th>
+                <th>Recorded By</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rec in recent_logs %}
+            <tr>
+                <td>{{ rec.date|date:"d M Y" }}</td>
+                <td>{{ rec.quantity }}</td>
+                <td>{{ rec.owner.get_full_name|default:rec.owner.username }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align:center; color:#9ca3af;">No logs</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p><strong>Certified by:</strong> ___________________________ (Mine Manager)</p>
+        <p>This is an electronically generated report • Valid without signature</p>
+        <p>Zambia Mining Management System (ZM) • {{ generated_date }}</p>
+    </div>
+</body>
+</html>
