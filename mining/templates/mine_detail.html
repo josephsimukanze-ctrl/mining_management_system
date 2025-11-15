@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block title %}{{ mine.name }} • Overview{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-800 to-blue-900 text-white p-8 rounded-xl shadow-lg mb-8">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-4xl font-bold">{{ mine.name }}</h1>
+                <p class="text-blue-100 mt-1 text-lg">{{ mine.location }}</p>
+                <p class="text-sm opacity-90 mt-2">
+                    <span class="font-mono" id="current-time"></span> CAT
+                </p>
+            </div>
+            <div class="flex space-x-3">
+                <a href="{% url 'mine_update' mine.pk %}" 
+                   class="bg-white text-blue-700 px-5 py-2 rounded-lg font-bold hover:bg-blue-50 shadow">
+                    Edit
+                </a>
+                <a href="{% url 'mine_delete' mine.pk %}" 
+                   class="bg-red-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-red-700 shadow">
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- ... your stats cards here ... -->
+    </div>
+
+    <!-- Live Production Graph -->
+    <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Production Trend (Last 7 Days)</h2>
+            <div class="text-sm text-gray-500">
+                Avg: <strong>{{ avg_7day|floatformat:1 }} t/day</strong>
+            </div>
+        </div>
+        <canvas id="productionChart" height="100"></canvas>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- ... your quick action cards here ... -->
+    </div>
+
+    <!-- PDF Download Button -->
+    <div class="text-center mt-8">
+        <a href="{% url 'mine_report_pdf' mine.pk %}" 
+           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-lg shadow hover:shadow-xl transform hover:scale-105 transition">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Download PDF Report
+        </a>
+    </div>
+<!-- After PDF Report button -->
+<div class="text-center mt-4">
+    <a href="{% url 'annual_report_pdf' mine.pk %}" 
+       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold rounded-lg shadow hover:shadow-xl transform hover:scale-105 transition">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 12h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        Download 2025 Annual Report
+    </a>
+</div>
+    <!-- License Document -->
+    {% if mine.license_doc %}
+    <div class="bg-gray-50 p-6 rounded-xl border mb-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <p class="font-bold text-gray-700">Mining License</p>
+                <p class="text-sm text-gray-500">Uploaded: {{ mine.license_doc.name|cut:"mines/licenses/" }}</p>
+            </div>
+            <a href="{{ mine.license_doc.url }}" target="_blank" 
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
+                View Document
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Zambia Compliance -->
+    <div class="bg-gradient-to-r from-yellow-400 to-amber-500 text-white p-6 rounded-xl shadow-inner text-center">
+        <p class="font-bold text-xl">ZM Ministry of Mines • Compliance Verified</p>
+        <p class="text-sm opacity-90 mt-1">
+            EIA • ZEMA • License • Daily Logs • NAPSA • ZABS
+        </p>
+    </div>
+</div>
+
+<!-- Chart.js + Live Clock -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Live Clock (Zambia Time)
+    function updateTime() {
+        const now = new Date();
+        const options = { timeZone: 'Africa/Lusaka', hour12: false };
+        const timeStr = now.toLocaleTimeString('en-GB', options).slice(0, 5);
+        const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        document.getElementById('current-time').textContent = `${dateStr}, ${timeStr}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Production Chart
+    const ctx = document.getElementById('productionChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ production_dates|safe }},
+            datasets: [{
+                label: 'Daily Production (tons)',
+                data: {{ production_values|safe }},
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#10b981',
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y + ' tons';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Tons' }
+                },
+                x: {
+                    title: { display: true, text: 'Date' }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

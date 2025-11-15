@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mining System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-blue-700 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-2xl font-bold">Mining Mgmt</a>
+            <div class="space-x-4">
+                {% if user.is_authenticated %}
+                    <nav class="space-x-4">
+    <a href="{% url 'dashboard' %}" class="text-gray-700 hover:text-blue-700 font-medium">Dashboard</a>
+    <a href="{% url 'mine_list' %}" class="text-gray-700 hover:text-blue-700 font-medium">Mines</a>
+    <a href="{% url 'equipment_list' %}" class="text-gray-700 hover:text-blue-700 font-medium">Equipment</a>
+    <a href="{% url 'employee_dashboard' %}" class="text-gray-700 hover:text-blue-700 font-medium">Staff</a>
+    <a href="{% url 'production_list' %}" class="text-gray-700 hover:text-blue-700 font-medium">Production</a>
+    <a href="{% url 'reports_dashboard' %}" class="text-gray-700 hover:text-blue-700 font-medium">Reports</a>
+    <a href="{% url 'logout' %}" class="text-gray-700 hover:text-red-600 font-medium">Logout</a>
+</nav>
+
+
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:underline">Login</a>
+                    <a href="{% url 'register' %}" class="hover:underline">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main class="container mx-auto mt-6 p-4">
+        {% include 'messages.html' %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
