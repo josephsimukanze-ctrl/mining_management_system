@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 DNS resolution failed for api.zamtel.zm, trying fallback DNS 8.8.8.8
 Fallback DNS also failed for api.zamtel.zm: The DNS query name does not exist: api.zamtel.zm.
+=======
+DNS resolution failed for api.zamtel.zm, trying fallback DNS 8.8.8.8
+Fallback DNS also failed for api.zamtel.zm: The DNS query name does not exist: api.zamtel.zm.
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25

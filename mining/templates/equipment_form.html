@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block title %}{{ title|default:"Add Equipment" }}{% endblock %}
 
@@ -68,4 +69,76 @@
         <p>Service heavy machinery every <strong>250 hours</strong> or <strong>3 months</strong>, whichever comes first.</p>
     </div>
 </div>
+=======
+{% extends 'base.html' %}
+{% block title %}{{ title|default:"Add Equipment" }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white p-8 rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+            {{ title|default:"Register New Equipment" }}
+        </h1>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Type -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Equipment Type <span class="text-red-500">*</span>
+                </label>
+                {{ form.type }}
+                <p class="mt-1 text-xs text-gray-500">e.g., Excavator, Dump Truck, Drill Rig</p>
+                {% if form.type.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.type.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Current Status <span class="text-red-500">*</span>
+                </label>
+                {{ form.status }}
+            </div>
+
+            <!-- Assigned Mine -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Assigned Mine <span class="text-red-500">*</span>
+                </label>
+                {{ form.mine }}
+            </div>
+
+            <!-- Last Service Date -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Last Service Date
+                </label>
+                {{ form.last_service }}
+                <p class="mt-1 text-xs text-gray-500">Leave blank if never serviced</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-between items-center pt-6 border-t">
+                <a href="{% url 'equipment_list' %}" 
+                   class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="px-8 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition">
+                    {% if form.instance.pk %}Update Equipment{% else %}Add Equipment{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Zambia Tip -->
+    <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-5 text-sm text-blue-800">
+        <p class="font-bold">ZM Safety Standard:</p>
+        <p>Service heavy machinery every <strong>250 hours</strong> or <strong>3 months</strong>, whichever comes first.</p>
+    </div>
+</div>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 {% endblock %}

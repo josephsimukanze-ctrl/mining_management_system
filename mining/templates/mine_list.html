@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block title %}Mines{% endblock %}
 
@@ -120,4 +121,128 @@ document.getElementById('status-filter').addEventListener('change', function() {
     });
 });
 </script>
+=======
+{% extends 'base.html' %}
+{% block title %}Mines{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-800 to-blue-900 text-white p-6 rounded-xl shadow-lg mb-8">
+        <h1 class="text-3xl font-bold">Mine Sites</h1>
+        <p class="text-blue-100">Manage all registered mining operations</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+            <p class="text-sm text-gray-600">Total Mines</p>
+            <p class="text-3xl font-bold text-blue-700">{{ mines.count }}</p>
+        </div>
+        <div class="bg-green-50 p-6 rounded-xl shadow hover:shadow-xl transition">
+            <p class="text-sm text-green-600">Active</p>
+            <p class="text-3xl font-bold text-green-700">{{ active_count }}</p>
+        </div>
+        <div class="bg-red-50 p-6 rounded-xl shadow hover:shadow-xl transition">
+            <p class="text-sm text-red-600">Inactive</p>
+            <p class="text-3xl font-bold text-red-700">{{ inactive_count }}</p>
+        </div>
+        <div class="bg-purple-50 p-6 rounded-xl shadow hover:shadow-xl transition">
+            <p class="text-sm text-purple-600">Total Staff</p>
+            <p class="text-3xl font-bold text-purple-700">{{ total_employees }}</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white p-4 rounded-xl shadow mb-6 flex flex-wrap gap-4 items-center">
+        <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Status:</label>
+            <select id="status-filter" class="px-3 py-1 border rounded-lg text-sm">
+                <option value="">All</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+        <a href="{% url 'mine_create' %}" 
+           class="ml-auto bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium shadow transition">
+            + Register New Mine
+        </a>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="px-6 py-4 text-left font-semibold">Mine Name</th>
+                        <th class="px-6 py-4 text-left font-semibold">Location</th>
+                        <th class="px-6 py-4 text-left font-semibold">Status</th>
+                        <th class="px-6 py-4 text-left font-semibold">Employees</th>
+                        <th class="px-6 py-4 text-left font-semibold">Equipment</th>
+                        <th class="px-6 py-4 text-left font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600" id="mine-table">
+                    {% for mine in mines %}
+                    <tr class="border-t hover:bg-gray-50 transition" data-status="{{ mine.status }}">
+                        <td class="px-6 py-4">
+                            <a href="{% url 'mine_detail' mine.pk %}" class="font-bold text-blue-700 hover:underline">
+                                {{ mine.name }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 text-sm">{{ mine.location }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full
+                                {% if mine.status == 'Active' %}bg-green-100 text-green-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ mine.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center font-medium">
+                            {{ mine.employee_count }}
+                        </td>
+                        <td class="px-6 py-4 text-center font-medium">
+                            {{ mine.equipment_count }}
+                        </td>
+                        <td class="px-6 py-4 flex space-x-3">
+                            <a href="{% url 'mine_update' mine.pk %}" class="text-blue-600 hover:underline">Edit</a>
+                            <a href="{% url 'mine_delete' mine.pk %}" class="text-red-600 hover:underline">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            No mines registered. 
+                            <a href="{% url 'mine_create' %}" class="text-blue-600 underline">Register the first one</a>.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Zambia Compliance -->
+    <div class="mt-8 bg-gradient-to-r from-yellow-400 to-amber-500 text-white p-5 rounded-xl shadow-inner text-center">
+        <p class="font-bold text-lg">ZM Ministry of Mines</p>
+        <p class="text-sm opacity-90">All mines must have <strong>valid license</strong> • <strong>EIA</strong> • <strong>ZEMA clearance</strong></p>
+    </div>
+</div>
+
+<script>
+document.getElementById('status-filter').addEventListener('change', function() {
+    const status = this.value;
+    const rows = document.querySelectorAll('#mine-table tr');
+    rows.forEach(row => {
+        const rowStatus = row.getAttribute('data-status');
+        if (!status || rowStatus === status) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 {% endblock %}

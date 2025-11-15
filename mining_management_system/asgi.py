@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 ASGI config for mining_management_system project.
 
@@ -14,3 +15,21 @@ from django.core.asgi import get_asgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mining_management_system.settings')
 
 application = get_asgi_application()
+=======
+"""
+ASGI config for mining_management_system project.
+
+It exposes the ASGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
+"""
+
+import os
+
+from django.core.asgi import get_asgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mining_management_system.settings')
+
+application = get_asgi_application()
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25

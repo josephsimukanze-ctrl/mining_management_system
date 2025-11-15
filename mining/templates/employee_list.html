@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block title %}Employees{% endblock %}
 
@@ -136,4 +137,144 @@
     updateTime();
     setInterval(updateTime, 1000);
 </script>
+=======
+{% extends 'base.html' %}
+{% block title %}Employees{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-lg">
+    <!-- Header with Dashboard Link & Add Button -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+            <div class="flex items-center space-x-2 text-sm text-gray-500 mb-1">
+                <a href="{% url 'employee_dashboard' %}" class="hover:text-blue-600 underline">
+                    Employee Dashboard
+                </a>
+                <span>›</span>
+                <span class="font-medium text-gray-700">All Employees</span>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">Employees</h1>
+            <p class="text-xs text-gray-500 mt-1">
+                Generated: <span id="current-time">15 Nov 2025, 10:42</span> CAT • ZM Mining System
+            </p>
+        </div>
+        <a href="{% url 'employee_create' %}" 
+           class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium px-5 py-2 rounded-lg transition duration-200 shadow-lg transform hover:scale-105">
+            + Add Employee
+        </a>
+    </div>
+
+    <!-- Responsive Table Container -->
+    <div class="overflow-x-auto border border-gray-200 rounded-lg">
+        <table class="min-w-full table-auto">
+            <thead class="bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-b">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold text-sm">Photo</th>
+                    <th class="px-4 py-3 text-left font-semibold text-sm">Name</th>
+                    <th class="px-4 py-3 text-left font-semibold text-sm">Role</th>
+                    <th class="px-4 py-3 text-left font-semibold text-sm">NRC</th>
+                    <th class="px-4 py-3 text-left font-semibold text-sm">Assigned Mine</th>
+                    <th class="px-4 py-3 text-left font-semibold text-sm">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for employee in items %}
+                <tr class="hover:bg-gray-50 transition duration-150">
+                    <!-- Photo -->
+                    <td class="px-4 py-3">
+                        {% if employee.photo %}
+                            <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-gray-300 shadow-sm">
+                        {% else %}
+                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                                {{ employee.name|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                    </td>
+
+                    <!-- Name -->
+                    <td class="px-4 py-3">
+                        <span class="font-medium text-gray-800">{{ employee.name }}</span>
+                    </td>
+
+                    <!-- Role -->
+                    <td class="px-4 py-3">
+                        <span class="inline-block px-3 py-1 text-xs font-bold rounded-full
+                            {% if employee.role == 'Manager' %}bg-blue-100 text-blue-800
+                            {% elif employee.role == 'Supervisor' %}bg-purple-100 text-purple-800
+                            {% elif employee.role == 'Operator' %}bg-green-100 text-green-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ employee.role }}
+                        </span>
+                    </td>
+
+                    <!-- NRC -->
+                    <td class="px-4 py-3">
+                        <span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded border">
+                            {{ employee.nrc }}
+                        </span>
+                    </td>
+
+                    <!-- Mine -->
+                    <td class="px-4 py-3">
+                        <a href="{% url 'mine_detail' employee.mine.pk %}" 
+                           class="text-sm text-blue-600 hover:underline font-medium">
+                            {{ employee.mine.name }}
+                        </a>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="px-4 py-3 flex space-x-3 text-sm">
+                        <a href="{% url 'employee_update' employee.pk %}" 
+                           class="text-blue-600 hover:text-blue-800 font-medium underline">
+                            Edit
+                        </a>
+                        <a href="{% url 'employee_delete' employee.pk %}" 
+                           class="text-red-600 hover:text-red-800 font-medium underline">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-4 py-10 text-center text-gray-500">
+                        <p class="mb-2">No employees added yet.</p>
+                        <a href="{% url 'employee_create' %}" class="text-blue-600 underline font-medium">
+                            Add the first employee
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg text-sm text-blue-800 flex justify-between items-center">
+        <div>
+            <strong>Total Employees:</strong> {{ items|length }}
+            {% if items %}
+            • <strong>NAPSA Compliant:</strong> 
+            <span class="text-green-700">{{ items|length }}/{{ items|length }}</span>
+            {% endif %}
+        </div>
+        <div class="text-xs text-gray-500">
+            ZM • NAPSA • ZEMA Ready
+        </div>
+    </div>
+</div>
+
+<!-- Live CAT Clock -->
+<script>
+    function updateTime() {
+        const now = new Date();
+        const options = { timeZone: 'Africa/Lusaka', hour12: false };
+        const timeStr = now.toLocaleTimeString('en-GB', options).slice(0, 5);
+        const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        document.getElementById('current-time').textContent = `${dateStr}, ${timeStr}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+</script>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 {% endblock %}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block title %}Production Records{% endblock %}
 
@@ -85,4 +86,93 @@
         <p>Daily production must be logged by <strong>18:00 CAT</strong> for statutory reporting.</p>
     </div>
 </div>
+=======
+{% extends 'base.html' %}
+{% block title %}Production Records{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow-lg">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Production Records</h1>
+        <a href="{% url 'production_create' %}" 
+           class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-lg shadow transition">
+            + Log Production
+        </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <p class="text-sm text-blue-600 font-semibold">Total Entries</p>
+            <p class="text-2xl font-bold text-blue-800">{{ items|length }}</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+            <p class="text-sm text-green-600 font-semibold">This Month</p>
+            <p class="text-2xl font-bold text-green-800">
+                {{ monthly_total|floatformat:2 }} tons
+            </p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+            <p class="text-sm text-purple-600 font-semibold">Avg Daily</p>
+            <p class="text-2xl font-bold text-purple-800">
+                {{ avg_daily|floatformat:2 }} tons
+            </p>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">Date</th>
+                    <th class="px-4 py-3 text-left font-semibold">Mine</th>
+                    <th class="px-4 py-3 text-left font-semibold">Quantity (tons)</th>
+                    <th class="px-4 py-3 text-left font-semibold">Recorded By</th>
+                    <th class="px-4 py-3 text-left font-semibold">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600">
+                {% for record in items %}
+                <tr class="border-t hover:bg-gray-50 transition">
+                    <td class="px-4 py-3">
+                        <span class="font-medium">{{ record.date|date:"d M Y" }}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="text-blue-600 font-medium">{{ record.mine.name }}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="inline-block px-3 py-1 bg-green-100 text-green-800 font-bold rounded-full text-sm">
+                            {{ record.quantity }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        {{ record.owner.username }}
+                    </td>
+                    <td class="px-4 py-3 flex space-x-2">
+                        <a href="{% url 'production_update' record.pk %}" 
+                           class="text-blue-600 hover:underline font-medium">Edit</a>
+                        <a href="{% url 'production_delete' record.pk %}" 
+                           class="text-red-600 hover:underline font-medium">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                        No production records yet. 
+                        <a href="{% url 'production_create' %}" class="text-blue-600 underline">Log the first one</a>.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Zambia Compliance Note -->
+    <div class="mt-6 p-4 bg-yellow-50 border border-yellow-300 rounded-lg text-sm text-yellow-800">
+        <p class="font-bold">ZM Ministry of Mines:</p>
+        <p>Daily production must be logged by <strong>18:00 CAT</strong> for statutory reporting.</p>
+    </div>
+</div>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 {% endblock %}

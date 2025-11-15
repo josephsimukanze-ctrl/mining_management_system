@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block title %}Dashboard{% endblock %}
 
@@ -164,4 +165,172 @@ function updateTime() {
 updateTime();
 setInterval(updateTime, 1000);
 </script>
+=======
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-700 to-blue-900 text-white p-6 rounded-xl shadow-lg mb-8">
+        <h1 class="text-3xl font-bold">Mining Operations Dashboard</h1>
+        <p class="text-blue-100 mt-1">
+            {{ user.get_full_name|default:user.username }} • 
+            <span id="current-time" class="font-mono text-sm"></span> CAT
+        </p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Mines -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Active Mines</p>
+                    <p class="text-3xl font-bold text-blue-700">{{ mines.count }}</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="{% url 'mine_list' %}" class="text-xs text-blue-600 hover:underline mt-2 inline-block">View all</a>
+        </div>
+
+        <!-- Equipment -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Operational Equipment</p>
+                    <p class="text-3xl font-bold text-green-700">
+                        {{ operational_eq }} / {{ total_eq }}
+                    </p>
+                    <p class="text-xs text-green-600">{{ utilization|floatformat:1 }}% Utilization</p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="{% url 'equipment_list' %}" class="text-xs text-green-600 hover:underline mt-2 inline-block">View inventory</a>
+        </div>
+
+        <!-- Employees -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Workforce</p>
+                    <p class="text-3xl font-bold text-purple-700">{{ employees.count }}</p>
+                    <p class="text-xs text-purple-600">Across {{ mines.count }} site{{ mines.count|pluralize }}</p>
+                </div>
+                <div class="bg-purple-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 4.354a4 4 0 110 5.292M15 21H9v-1c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v1zm3-6h.01M9 15h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="{% url 'employee_dashboard' %}" class="text-xs text-purple-600 hover:underline mt-2 inline-block">View staff</a>
+        </div>
+
+        <!-- Production -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Today's Output</p>
+                    <p class="text-3xl font-bold text-amber-700">
+                        {{ today_production|floatformat:1 }} t
+                    </p>
+                    <p class="text-xs text-amber-600">Target: {{ daily_target }} t</p>
+                </div>
+                <div class="bg-amber-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="{% url 'production_list' %}" class="text-xs text-amber-600 hover:underline mt-2 inline-block">View logs</a>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <a href="{% url 'production_create' %}" 
+           class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition text-center">
+            <svg class="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <p class="font-bold">Log Production</p>
+            <p class="text-xs opacity-90">Record today's output</p>
+        </a>
+
+        <a href="{% url 'equipment_create' %}" 
+           class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition text-center">
+            <svg class="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <p class="font-bold">Add Equipment</p>
+            <p class="text-xs opacity-90">Register new asset</p>
+        </a>
+
+        <a href="{% url 'employee_add' %}" 
+           class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition text-center">
+            <svg class="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+            </svg>
+            <p class="font-bold">Hire Employee</p>
+            <p class="text-xs opacity-90">Add with NRC</p>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+        <div class="space-y-3">
+            {% for record in recent_production %}
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-green-100 p-2 rounded-full">
+                        <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium">{{ record.quantity }} tons logged</p>
+                        <p class="text-xs text-gray-500">{{ record.mine.name }} • {{ record.date|date:"d M" }}</p>
+                    </div>
+                </div>
+                <span class="text-xs text-gray-500">{{ record.owner.username }}</span>
+            </div>
+            {% empty %}
+            <p class="text-center text-gray-500 py-6">No production logged yet today.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Zambia Compliance Banner -->
+    <div class="mt-8 bg-gradient-to-r from-yellow-400 to-amber-500 text-white p-5 rounded-xl shadow-inner text-center">
+        <p class="font-bold text-lg">ZM Ministry of Mines Compliance</p>
+        <p class="text-sm opacity-90">All data logged by <strong>18:00 CAT</strong> • <strong>ZABS</strong> & <strong>NAPSA</strong> ready</p>
+    </div>
+</div>
+
+<!-- Live Clock (Zambia Time) -->
+<script>
+function updateTime() {
+    const now = new Date();
+    const options = { timeZone: 'Africa/Lusaka', hour12: false };
+    const timeStr = now.toLocaleTimeString('en-GB', options).slice(0, 5);
+    const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    document.getElementById('current-time').textContent = ${dateStr}, ${timeStr};
+}
+updateTime();
+setInterval(updateTime, 1000);
+</script>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 {% endblock %}

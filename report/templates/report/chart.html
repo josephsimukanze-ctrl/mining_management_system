@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block title %}{{ title }}{% endblock %}
 
@@ -46,3 +47,53 @@
     });
 </script>
 {% endblock %}
+=======
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-6">
+    <div class="bg-white rounded-xl shadow-lg p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">{{ title }}</h1>
+            <a href="{% url 'reports_dashboard' %}" class="text-blue-600 hover:underline">Back to Reports</a>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+            <p class="text-sm text-gray-600"><strong>Summary:</strong> {{ summary }}</p>
+        </div>
+
+        <canvas id="reportChart" class="w-full h-96"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('reportChart').getContext('2d');
+
+    // Ensure chart_data is parsed safely as JSON
+    const data = {{ chart_data|safe }};
+
+    new Chart(ctx, {
+        type: '{{ chart_type }}',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        // Format ticks if necessary (e.g., round)
+                        callback: function(value) { return Number(value).toLocaleString(); }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25

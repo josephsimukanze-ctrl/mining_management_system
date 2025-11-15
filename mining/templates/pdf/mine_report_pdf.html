@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -153,4 +154,161 @@
 
 </div>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ mine.name }} - Monthly Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TailwindCSS via CDN (WeasyPrint supports it) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @top-center {
+                content: "REPUBLIC OF ZAMBIA • MINISTRY OF MINES AND MINERALS DEVELOPMENT";
+                font-size: 10pt;
+                font-weight: bold;
+                color: #1d4ed8;
+            }
+            @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 9pt;
+                color: #6b7280;
+            }
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 leading-relaxed">
+
+<div class="max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center border-b-4 border-blue-700 pb-6 mb-8">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/1280px-Flag_of_Zambia.svg.png" 
+             alt="Zambia Flag" class="w-16 float-right ml-4 mb-2 border border-gray-300 rounded">
+        <h1 class="text-4xl font-bold text-blue-700 mt-2">{{ mine.name }}</h1>
+        <p class="text-lg font-semibold text-gray-700">Monthly Production & Compliance Report</p>
+        <p class="text-sm text-gray-600">
+            Site: <span class="font-medium">{{ mine.location }}</span> • 
+            Generated: <span class="font-medium">{{ generated_date }}</span>
+        </p>
+    </div>
+
+    <!-- Key Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-gray-50 border-l-4 border-blue-600 p-4 rounded-r-lg shadow-sm">
+            <p class="text-2xl font-bold text-blue-700">{{ monthly_total|floatformat:1 }}</p>
+            <p class="text-xs text-gray-600">Monthly Output (tons)</p>
+        </div>
+        <div class="bg-gray-50 border-l-4 border-green-600 p-4 rounded-r-lg shadow-sm">
+            <p class="text-2xl font-bold text-green-700">{{ avg_daily|floatformat:1 }}</p>
+            <p class="text-xs text-gray-600">Avg Daily (tons)</p>
+        </div>
+        <div class="bg-gray-50 border-l-4 border-purple-600 p-4 rounded-r-lg shadow-sm">
+            <p class="text-2xl font-bold text-purple-700">{{ mine.employee_count }}</p>
+            <p class="text-xs text-gray-600">Workforce</p>
+        </div>
+        <div class="bg-gray-50 border-l-4 border-indigo-600 p-4 rounded-r-lg shadow-sm">
+            <p class="text-2xl font-bold text-indigo-700">{{ mine.equipment_count }}</p>
+            <p class="text-xs text-gray-600">Equipment Units</p>
+        </div>
+    </div>
+
+    <!-- Production Chart -->
+    <div class="mb-10">
+        <h2 class="text-xl font-bold text-blue-700 border-b-2 border-blue-600 pb-2 mb-4">
+            Production Trend (Last 7 Days)
+        </h2>
+        {% if chart_image %}
+        <img src="data:image/png;base64,{{ chart_image }}" 
+             alt="7-Day Production Chart" 
+             class="w-full max-w-2xl mx-auto border border-gray-300 rounded-lg shadow-md">
+        {% else %}
+        <p class="text-center text-gray-500 italic py-8">
+            No production data available for chart.
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Recent Logs Table -->
+    <div class="mb-10">
+        <h2 class="text-xl font-bold text-blue-700 border-b-2 border-blue-600 pb-2 mb-4">
+            Recent Production Logs
+        </h2>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+                <thead>
+                    <tr class="bg-blue-50 text-blue-800">
+                        <th class="border border-blue-200 px-4 py-3 text-left font-bold">Date</th>
+                        <th class="border border-blue-200 px-4 py-3 text-left font-bold">Quantity (tons)</th>
+                        <th class="border border-blue-200 px-4 py-3 text-left font-bold">Recorded By</th>
+                        <th class="border border-blue-200 px-4 py-3 text-right font-bold">Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in recent_logs %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-3 font-medium">
+                            {{ rec.date|date:"d M Y" }}
+                        </td>
+                        <td class="border border-gray-300 px-4 py-3">{{ rec.quantity|floatformat:1 }}</td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            {{ rec.owner.get_full_name|default:rec.owner.username }}
+                        </td>
+                        <td class="border border-gray-300 px-4 py-3 text-right font-medium">
+                            {{ daily_target }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-gray-500 py-8 italic border border-gray-300">
+                            No production logs for this period.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Compliance Badge -->
+    <div class="bg-green-50 border-2 border-green-600 rounded-lg p-6 text-center mb-10">
+        <p class="text-lg font-bold text-green-800">
+            COMPLIANCE STATUS: FULLY CERTIFIED
+        </p>
+        <p class="text-sm text-green-700 mt-1">
+            ZEMA • NAPSA • ZABS • MINES ACT • DAILY LOGGING
+        </p>
+    </div>
+
+    <!-- Signatures -->
+    <div class="grid grid-cols-2 gap-8 mt-12">
+        <div class="text-center">
+            <div class="border-t-2 border-blue-700 w-48 mx-auto mb-2"></div>
+            <p class="font-medium">Mine Manager</p>
+            <p class="text-sm text-gray-600">{{ mine.name }}</p>
+        </div>
+        <div class="text-center">
+            <div class="border-t-2 border-blue-700 w-48 mx-auto mb-2"></div>
+            <p class="font-medium">Safety & Compliance Officer</p>
+            <p class="text-sm text-gray-600">{{ mine.name }}</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-16 pt-6 border-t border-gray-300 text-center text-xs text-gray-600">
+        <p class="font-bold">Zambia Mining Management System (ZM)</p>
+        <p>{{ generated_date }} • Electronically generated • Valid without signature</p>
+        <p>Support: support@zm-mining.co.zm • Hotline: +260 977 123 456</p>
+    </div>
+
+</div>
+</body>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 </html>

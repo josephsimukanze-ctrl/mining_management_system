@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" class="h-full scroll-smooth">
@@ -361,4 +362,369 @@
 </script>
 
 </body>
+=======
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zambia Mining Management System (ZM)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zm: { blue: '#1E40AF', green: '#16A34A', orange: '#EA580C', red: '#DC2626' }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'pulse-warning': 'pulse 1.5s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .zm-time { font-family: 'Courier New', monospace; letter-spacing: 1.5px; }
+        .glass { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.78); }
+        .hero-title { animation: fadeInUp 0.8s ease-out; }
+        .hero-subtitle { animation: fadeInUp 0.8s ease-out 0.2s backwards; }
+        .hero-buttons { animation: fadeInUp 0.8s ease-out 0.4s backwards; }
+        .hero-clock { animation: fadeInUp 0.8s ease-out 0.6s backwards; }
+        .progress-bar { height: 8px; background: linear-gradient(90deg, #10b981 var(--progress, 0%), #e5e7eb var(--progress, 0%)); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-emerald-50 to-orange-50 min-h-screen text-gray-800">
+
+<!-- Navigation -->
+<nav class="bg-white/95 backdrop-blur-sm shadow-md sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/512px-Flag_of_Zambia.svg.png" 
+                         alt="Zambia Flag" class="w-9 h-9 rounded-full ring-2 ring-orange-500 shadow-sm">
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse-slow"></div>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-zm-blue to-zm-green bg-clip-text text-transparent">
+                    ZM Mining
+                </span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="{% url 'dashboard' %}" class="text-gray-700 hover:text-zm-blue font-medium transition-colors">Dashboard</a>
+                <a href="{% url 'mine_list' %}" class="text-gray-700 hover:text-zm-blue font-medium transition-colors">Mines</a>
+                {% if user.is_authenticated %}
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Welcome</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ user.get_full_name|default:user.username|truncatewords:1 }}</p>
+                    </div>
+                    <a href="{% url 'logout' %}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all transform hover:scale-105">
+                        Logout
+                    </a>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="bg-gradient-to-r from-zm-green to-emerald-600 text-white px-6 py-2 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-md hover:shadow-lg">
+                    Login
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+        <div class="px-4 py-3 space-y-2">
+            <a href="{% url 'dashboard' %}" class="block py-2 text-gray-700 hover:text-zm-blue font-medium">Dashboard</a>
+            <a href="{% url 'mine_list' %}" class="block py-2 text-gray-700 hover:text-zm-blue font-medium">Mines</a>
+            {% if user.is_authenticated %}
+            <div class="py-2 border-t border-gray-200">
+                <p class="text-sm text-gray-600">Logged in as <strong>{{ user.get_full_name|default:user.username }}</strong></p>
+                <a href="{% url 'logout' %}" class="block mt-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium text-center">Logout</a>
+            </div>
+            {% else %}
+            <a href="{% url 'login' %}"24 class="block mt-2 bg-zm-green text-white px-4 py-2 rounded-lg font-medium text-center">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<main>
+<!-- Hero Section -->
+<section class="relative overflow-hidden py-24 px-4">
+    <div class="absolute inset-0 bg-gradient-to-t from-orange-100/20 to-transparent pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto text-center relative z-10">
+        <h1 class="hero-title text-5xl md:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-zm-blue via-zm-green to-orange-600 leading-tight">
+            Zambia Mining Management
+        </h1>
+        <p class="hero-subtitle mt-6 text-lg md:text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+            Fully compliant with <span class="font-bold text-zm-blue">Ministry of Mines</span>, 
+            <span class="font-bold text-zm-green">ZEMA</span>, 
+            <span class="font-bold text-orange-600">NAPSA</span>, and 
+            <span class="font-bold text-purple-700">ZABS</span>. 
+            Real-time production, workforce, and equipment tracking for Zambian mines.
+        </p>
+
+        <div class="hero-buttons flex flex-col sm:flex-row gap-4 justify-center mt-10">
+            {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" 
+               class="group bg-gradient-to-r from-zm-blue to-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                <span>Go to Dashboard</span>
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+            <a href="{% url 'production_create' %}" 
+               class="group bg-gradient-to-r from-zm-green to-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                <span>Log Production</span>
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" 
+               class="group bg-gradient-to-r from-zm-green to-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                <span>Login to Start</span>
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14"></path>
+                </svg>
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Live Clock -->
+        <div class="hero-clock mt-12 glass rounded-2xl p-6 inline-block shadow-xl border border-white/50">
+            <p class="text-sm text-gray-600 font-medium">Current Time (CAT)</p>
+            <p id="live-clock" class="text-3xl md:text-4xl font-bold text-zm-blue zm-time tracking-wider">19:31 • 10 Nov 2025</p>
+            <p class="text-sm text-gray-500 mt-1">Lusaka, Zambia • {{ current_date }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-4">ZM-Compliant Features</h2>
+        <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+            Built for Zambian mining regulations — accurate, auditable, and efficient.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Daily Production Logging -->
+            <div class="group bg-white p-7 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 cursor-pointer"
+                 onclick="window.location.href='{% url 'production_create' %}'">
+                <div class="bg-gradient-to-br from-zm-blue to-blue-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5 shadow-md">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-2m3 2v-2m-9-4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-zm-blue mb-3">Daily Production Logging</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Log output by <strong>18:00 CAT</strong> as required by 
+                    <a href="{% url 'production_create' %}" class="text-zm-blue hover:underline font-medium">
+                        Ministry of Mines
+                    </a>.
+                </p>
+                <div class="mt-4 text-sm text-zm-blue font-medium flex items-center group-hover:translate-x-1 transition">
+                    Log Now
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- NRC Employee Tracking -->
+            <div class="group bg-white p-7 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 cursor-pointer"
+                 onclick="window.location.href='{% url 'employee_dashboard' %}'">
+                <div class="bg-gradient-to-br from-zm-green to-emerald-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5 shadow-md">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H9v-1c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v1zm3-6h.01M9 15h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-zm-green mb-3">NRC Employee Tracking</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    NAPSA-ready with unique NRC validation and photos.
+                    <a href="{% url 'employee_dashboard' %}" class="text-zm-green hover:underline font-medium">
+                        View Workforce
+                    </a>
+                </p>
+                <div class="mt-4 text-sm text-zm-green font-medium flex items-center group-hover:translate-x-1 transition">
+                    Manage Employees
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Equipment Service Logs -->
+            <div class="group bg-white p-7 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 cursor-pointer"
+                 onclick="window.location.href='{% url 'equipment_list' %}'">
+                <div class="bg-gradient-to-br from-purple-600 to-purple-700 w-14 h-14 rounded-xl flex items-center justify-center mb-5 shadow-md">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-purple-700 mb-3">Equipment Service Logs</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    ZABS-compliant with 250-hour service tracking.
+                    <a href="{% url 'equipment_list' %}" class="text-purple-700 hover:underline font-medium">
+                        Track Maintenance
+                    </a>
+                </p>
+                <div class="mt-4 text-sm text-purple-700 font-medium flex items-center group-hover:translate-x-1 transition">
+                    View Equipment
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Operations Snapshot (Authenticated Only) -->
+{% if user.is_authenticated %}
+<section id="stats-section" class="py-20 px-4 bg-gradient-to-r from-zm-blue/5 via-transparent to-zm-green/5">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-4">Your Operations Snapshot</h2>
+        <p class="text-center text-gray-600 mb-6">Live data from your registered mines • <span id="last-updated">Just now</span></p>
+
+        <!-- 18:00 Deadline Warning -->
+        {% if is_after_6pm and not daily_target_met %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-xl mb-8 text-center animate-pulse-warning max-w-2xl mx-auto">
+            <p class="font-bold text-lg">18:00 CAT Deadline Missed</p>
+            <p class="text-sm mt-1">Production logging for {{ current_date }} must be completed by 18:00.</p>
+        </div>
+        {% elif is_after_6pm and daily_target_met %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-3 rounded-xl mb-6 text-center max-w-2xl mx-auto">
+            <p class="font-semibold">Daily target met and logged on time!</p>
+        </div>
+        {% endif %}
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <!-- Active Mines -->
+            <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg text-center border border-gray-100">
+                <p class="text-4xl font-extrabold text-zm-blue">{{ mines_count }}</p>
+                <p class="text-sm text-gray-600 mt-1 font-medium">Active Mines</p>
+            </div>
+
+            <!-- Tons Today -->
+            <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg text-center border border-gray-100">
+                <p class="text-4xl font-extrabold text-zm-green">{{ today_production|floatformat:1 }}</p>
+                <p class="text-sm text-gray-600 mt-1 font-medium">Tons Today</p>
+                <div class="mt-3">
+                    <div class="text-xs text-gray-500 mb-1">{{ daily_progress }}% of 250t target</div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="progress-bar h-2 rounded-full transition-all duration-1000" style="--progress: {{ daily_progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workforce -->
+            <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg text-center border border-gray-100">
+                <p class="text-4xl font-extrabold text-purple-700">{{ total_employees }}</p>
+                <p class="text-sm text-gray-600 mt-1 font-medium">Workforce</p>
+            </div>
+
+            <!-- Operational Equipment -->
+            <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg text-center border border-gray-100">
+                <p class="text-4xl font-extrabold text-orange-600">
+                    {{ operational_eq }}<span class="text-2xl text-gray-500">/{{ total_eq }}</span>
+                </p>
+                <p class="text-sm text-gray-600 mt-1 font-medium">Operational Eq.</p>
+                <p class="text-xs text-gray-500 mt-1">({{ utilization_rate }}% uptime)</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Footer -->
+<footer class="bg-gradient-to-b from-zm-blue to-blue-900 text-white py-12 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+        <div class="flex justify-center items-center space-x-3 mb-5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/512px-Flag_of_Zambia.svg.png" 
+                 alt="Zambia" class="w-7 h-7 rounded-full shadow-lg">
+            <p class="text-xl font-bold">Zambia Mining Management System (ZM)</p>
+        </div>
+        <p class="text-sm opacity-90 leading-relaxed">
+            © 2025 • Compliant with Ministry of Mines, ZEMA, NAPSA, ZABS
+        </p>
+        <p class="text-sm mt-2 opacity-80">
+            Made with <span class="text-red-400">❤</span> in Zambia
+        </p>
+        <p class="text-xs mt-4 opacity-70">
+            Support: <a href="tel:+260977123456" class="underline hover:text-orange-300">+260 977 123 456</a> • 
+            <a href="mailto:support@zm-mining.co.zm" class="underline hover:text-orange-300">support@zm-mining.co.zm</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script>
+    // Mobile Menu Toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Live Clock (CAT)
+    function updateClock() {
+        const now = new Date();
+        const options = { timeZone: 'Africa/Lusaka', hour12: false };
+        const time = now.toLocaleTimeString('en-GB', options).slice(0, 5);
+        const date = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        document.getElementById('live-clock').textContent = `${time} • ${date}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Auto-refresh stats every 30 seconds
+    let lastUpdate = Date.now();
+    function updateLastUpdated() {
+        const elapsed = Math.floor((Date.now() - lastUpdate) / 1000);
+        const el = document.getElementById('last-updated');
+        if (el) el.textContent = elapsed < 60 ? 'Just now' : `${elapsed}s ago`;
+    }
+    setInterval(() => {
+        if (document.getElementById('stats-section')) {
+            fetch(window.location.href)
+                .then(r => r.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newStats = doc.getElementById('stats-section');
+                    if (newStats) {
+                        document.getElementById('stats-section').outerHTML = newStats.outerHTML;
+                        lastUpdate = Date.now();
+                        updateLastUpdated();
+                    }
+                });
+        }
+    }, 30000);
+    setInterval(updateLastUpdated, 5000);
+</script>
+
+</body>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 </html>

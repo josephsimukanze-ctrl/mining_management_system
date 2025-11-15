@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -272,4 +273,280 @@
     </div>
 
 </body>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Annual Mining Report 2025 - {{ mine.name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 1.8cm;
+            @top-center {
+                content: "REPUBLIC OF ZAMBIA • MINISTRY OF MINES AND MINERALS DEVELOPMENT";
+                font-size: 10pt;
+                font-weight: bold;
+                color: #1d4ed8;
+            }
+            @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 9pt;
+                color: #6b7280;
+            }
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #1f2937;
+            line-height: 1.7;
+            font-size: 11pt;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 4px double #1d4ed8;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            margin: 8px 0 4px;
+            color: #1d4ed8;
+            font-size: 28pt;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 4px 0;
+            color: #4b5563;
+        }
+        .zm-flag {
+            width: 70px;
+            float: right;
+            margin: 0 0 15px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+        .section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        .section h2 {
+            color: #1d4ed8;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 6px;
+            font-size: 16pt;
+            margin-bottom: 15px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border-left: 5px solid #3b82f6;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stat-card strong {
+            display: block;
+            font-size: 20pt;
+            color: #1d4ed8;
+            margin-bottom: 4px;
+        }
+        .stat-card span {
+            color: #6b7280;
+            font-size: 10pt;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 10pt;
+        }
+        th {
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 700;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #bfdbfe;
+        }
+        td {
+            padding: 8px 10px;
+            border: 1px solid #e5e7eb;
+        }
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        .chart-img {
+            width: 100%;
+            max-width: 700px;
+            margin: 25px auto;
+            display: block;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .compliance {
+            background: #ecfdf5;
+            border: 2px solid #10b981;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .compliance strong {
+            color: #166534;
+            font-size: 14pt;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 9pt;
+            color: #6b7280;
+        }
+        .signature {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11pt;
+        }
+        .signature div {
+            width: 45%;
+            border-top: 1px solid #1d4ed8;
+            padding-top: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/1280px-Flag_of_Zambia.svg.png" 
+             class="zm-flag" alt="Zambia Flag">
+        <h1>{{ mine.name }}</h1>
+        <p><strong>ANNUAL MINING OPERATIONS REPORT</strong></p>
+        <p>Calendar Year: <strong>2025</strong> | Location: {{ mine.location }}</p>
+        <p>Generated: {{ generated_date }} • ZM Mining Management System</p>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="section">
+        <h2>1. Executive Summary</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <strong>{{ total_production|floatformat:0 }}</strong>
+                <span>Total Ore Extracted (tons)</span>
+            </div>
+            <div class="stat-card">
+                <strong>{{ avg_monthly|floatformat:1 }}</strong>
+                <span>Avg Monthly Output (tons)</span>
+            </div>
+            <div class="stat-card">
+                <strong>{{ mine.employee_count }}</strong>
+                <span>Workforce (Avg)</span>
+            </div>
+            <div class="stat-card">
+                <strong>{{ mine.equipment_count }}</strong>
+                <span>Equipment Units</span>
+            </div>
+        </div>
+        <p>
+            In 2025, <strong>{{ mine.name }}</strong> achieved a total production of 
+            <strong>{{ total_production|floatformat:0 }} metric tons</strong> of ore, 
+            with an average monthly output of <strong>{{ avg_monthly|floatformat:1 }} tons</strong>. 
+            The operation maintained full compliance with ZEMA, NAPSA, and ZABS regulations.
+        </p>
+    </div>
+
+    <!-- Production Overview -->
+    <div class="section">
+        <h2>2. Annual Production Summary</h2>
+        <p><strong>Total Annual Output:</strong> {{ total_production|floatformat:1 }} tons</p>
+        
+        {% if monthly_chart %}
+        <img src="data:image/png;base64,{{ monthly_chart }}" class="chart-img" alt="Monthly Production 2025">
+        {% endif %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Production (tons)</th>
+                    <th>Target (tons)</th>
+                    <th>% Achieved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in monthly_data %}
+                <tr>
+                    <td><strong>{{ m.month }}</strong></td>
+                    <td>{{ m.total|floatformat:1 }}</td>
+                    <td>{{ m.target }}</td>
+                    <td>
+                        <strong style="color: {% if m.percent >= 100 %}#166534{% else %}#dc2626{% endif %}">
+                            {{ m.percent|floatformat:1 }}%
+                        </strong>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Workforce & Equipment -->
+    <div class="section">
+        <h2>3. Workforce & Equipment</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <strong>{{ total_employees }}</strong>
+                <span>Employees Registered</span>
+            </div>
+            <div class="stat-card">
+                <strong>{{ mine.equipment_count }}</strong>
+                <span>Equipment Units</span>
+            </div>
+            <div class="stat-card">
+                <strong>100%</strong>
+                <span>NAPSA Compliance</span>
+            </div>
+            <div class="stat-card">
+                <strong>Quarterly</strong>
+                <span>Safety Drills</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compliance Statement -->
+    <div class="compliance">
+        <strong>COMPLIANCE CERTIFIED</strong><br>
+        This operation is fully compliant with:
+        <strong>ZEMA • NAPSA • ZABS • MINES ACT</strong>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signature">
+        <div>
+            <strong>_</strong><br>
+            Mine Manager<br>
+            {{ mine.name }}
+        </div>
+        <div>
+            <strong>_</strong><br>
+            Safety Officer<br>
+            {{ mine.name }}
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Zambia Mining Management System (ZM)</strong> • Annual Report 2025</p>
+        <p>Electronically generated • Valid without physical signature</p>
+    </div>
+
+</body>
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
 </html>

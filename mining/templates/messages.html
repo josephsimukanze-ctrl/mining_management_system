@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 {% if messages %}
   <div class="mb-4">
@@ -8,3 +9,15 @@
     {% endfor %}
   </div>
 {% endif %}
+=======
+
+{% if messages %}
+  <div class="mb-4">
+    {% for message in messages %}
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-2">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+>>>>>>> ce25d35ba351259f21575ed2014c56965ea97c25
